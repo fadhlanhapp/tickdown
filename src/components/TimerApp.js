@@ -17,7 +17,14 @@ const TimerApp = () => {
     '#1abc9c', '#d35400', '#34495e', '#c0392b', '#16a085',
     '#8e44ad', '#27ae60', '#e67e22', '#f1c40f', '#2980b9'
   ];
-  
+
+
+  // Function to get random color from palette
+  const getRandomColor = () => {
+    const randomIndex = Math.floor(Math.random() * colorPalette.length);
+    return colorPalette[randomIndex];
+  };
+
   // Effect for countdown timer
   useEffect(() => {
     let interval = null;
@@ -46,12 +53,21 @@ const TimerApp = () => {
     setCentiseconds(0);
     setIsRunning(true);
     setIsComplete(false);
+
+    // Set random background color if hide timer is enabled
+    if (hideTimer) {
+        setBackgroundColor(getRandomColor());
+    }
   };
   
   const handleReset = () => {
     setTimeRemaining(seconds);
     setCentiseconds(0);
     setIsComplete(false);
+
+    if (hideTimer) {
+        setBackgroundColor(getRandomColor());
+    }
   };
   
   const handleBackToSettings = () => {
@@ -79,6 +95,16 @@ const TimerApp = () => {
       setSeconds('');
     }
   };
+
+    // Handle hide timer change
+    const handleHideTimerChange = (e) => {
+        const isChecked = e.target.checked;
+        setHideTimer(isChecked);
+        // If hideTimer is enabled, close the color palette
+        if (isChecked) {
+          setShowColorPalette(false);
+        }
+    };
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full" style={{ backgroundColor: !isRunning && !isComplete ? backgroundColor : 'inherit' }}>
@@ -87,47 +113,50 @@ const TimerApp = () => {
         <div className="bg-white rounded-lg shadow-lg p-8 m-4 max-w-sm w-full">
           <h1 className="text-2xl font-bold mb-6 text-center">Countdown Timer</h1>
           
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">Background Color</label>
-            <div className="relative" id="color-picker-container">
-              <div 
-                className="w-full h-10 rounded border border-gray-300 cursor-pointer flex items-center overflow-hidden"
-                onClick={() => setShowColorPalette(!showColorPalette)}
-              >
-                <div className="w-10 h-full" style={{ backgroundColor }}></div>
-                <div className="px-3 flex-1">{backgroundColor}</div>
-                <div className="px-2">▼</div>
-              </div>
-              
-              {showColorPalette && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white p-3 border rounded shadow-lg z-10">
-                  <div className="grid grid-cols-5 gap-2 mb-3">
-                    {colorPalette.map((color, index) => (
-                      <div 
-                        key={index}
-                        className="w-8 h-8 rounded-full cursor-pointer transform hover:scale-110 transition-transform border border-gray-300"
-                        style={{ backgroundColor: color }}
-                        onClick={() => {
-                          setBackgroundColor(color);
-                          setShowColorPalette(false);
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-2">
-                    <label className="block text-gray-700 text-sm mb-1">Custom Color</label>
-                    <input 
-                      type="color" 
-                      value={backgroundColor}
-                      onChange={(e) => setBackgroundColor(e.target.value)}
-                      className="w-full h-8 cursor-pointer"
-                    />
-                  </div>
+          {/* Only show color picker if hideTimer is false */}
+          {!hideTimer && (
+            <div className="mb-6">
+              <label className="block text-gray-700 mb-2">Background Color</label>
+              <div className="relative" id="color-picker-container">
+                <div 
+                  className="w-full h-10 rounded border border-gray-300 cursor-pointer flex items-center overflow-hidden"
+                  onClick={() => setShowColorPalette(!showColorPalette)}
+                >
+                  <div className="w-10 h-full" style={{ backgroundColor }}></div>
+                  <div className="px-3 flex-1">{backgroundColor}</div>
+                  <div className="px-2">▼</div>
                 </div>
-              )}
+                
+                {showColorPalette && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white p-3 border rounded shadow-lg z-10">
+                    <div className="grid grid-cols-5 gap-2 mb-3">
+                      {colorPalette.map((color, index) => (
+                        <div 
+                          key={index}
+                          className="w-8 h-8 rounded-full cursor-pointer transform hover:scale-110 transition-transform border border-gray-300"
+                          style={{ backgroundColor: color }}
+                          onClick={() => {
+                            setBackgroundColor(color);
+                            setShowColorPalette(false);
+                          }}
+                        ></div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-2">
+                      <label className="block text-gray-700 text-sm mb-1">Custom Color</label>
+                      <input 
+                        type="color" 
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="w-full h-8 cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
           
           <div className="mb-6">
             <label className="block text-gray-700 mb-2">Time (seconds)</label>
@@ -145,7 +174,7 @@ const TimerApp = () => {
               type="checkbox" 
               id="hideTimer"
               checked={hideTimer}
-              onChange={(e) => setHideTimer(e.target.checked)}
+              onChange={handleHideTimerChange}
               className="mr-2 h-5 w-5"
             />
             <label htmlFor="hideTimer" className="text-gray-700">
