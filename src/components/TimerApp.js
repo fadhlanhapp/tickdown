@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const TimerApp = () => {
   // States for the app
-  const [seconds, setSeconds] = useState(30);
+  const [seconds, setSeconds] = useState(3);
   const [backgroundColor, setBackgroundColor] = useState('#3498db');
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(seconds);
