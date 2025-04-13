@@ -159,7 +159,8 @@ const TimerApp = () => {
     }
   };
   
-  const handleBackToSettings = () => {
+  const handleBackToSettings = (e) => {
+    if (e) e.stopPropagation();
     setIsRunning(false);
     setIsComplete(false);
   };
@@ -350,7 +351,7 @@ const TimerApp = () => {
         >
           {/* Back button */}
           <button 
-            onClick={handleBackToSettings}
+            onClick={(e) => handleBackToSettings(e)}
             className="absolute top-4 right-4 text-white bg-black bg-opacity-50 w-10 h-10 rounded-full flex items-center justify-center text-xl z-10"
           >
             ×
