@@ -365,13 +365,13 @@ const TimerApp = () => {
           ) : (
             // Timer display
             <div className={`text-center ${hideTimer ? 'hidden' : ''}`}>
-              <div className="text-8xl md:text-9xl font-bold text-white font-mono">
+              <div className="text-9xl md:text-10xl font-bold text-white font-mono">
                 {hideMilliseconds 
                   ? (milliseconds > 1 ? timeRemaining + 1 : timeRemaining) // Round up if milliseconds > 1
                   : (
                     <>
                       {timeRemaining}.
-                      <span className="text-6xl md:text-7xl">
+                      <span className="text-7xl md:text-8xl">
                         {milliseconds.toString().padStart(2, '0')}
                       </span>
                     </>
